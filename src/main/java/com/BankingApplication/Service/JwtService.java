@@ -5,11 +5,13 @@ import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
@@ -41,18 +43,13 @@ public class JwtService {
                 .compact();
     }
 
-    public Claims extractClaims(String token)
+    public <T> T extractClaims(String token, Function<Claims, T> claimsTFunction)
     {
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        return claimsTFunction.apply(Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload());
     }
-
     public String extractSubject(String token)
     {
-        return extractClaims(token).getSubject();
+        return extractClaims(token, Claims::getSubject);
     }
 
     public boolean isTokenValid(String token)
@@ -62,7 +59,7 @@ public class JwtService {
 
     public Date extractExpiration(String token)
     {
-        return extractClaims(token).getExpiration();
+        return extractClaims(token, Claims::getExpiration);
     }
 
 

@@ -2,7 +2,9 @@ package com.BankingApplication.Controller;
 
 
 import com.BankingApplication.Dto.AccountDto;
+import com.BankingApplication.Dto.TransferDto;
 import com.BankingApplication.Model.Account;
+import com.BankingApplication.Model.Transaction;
 import com.BankingApplication.Model.User;
 import com.BankingApplication.Service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,11 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getUserAccount(user.getUid()));
     }
 
+    @PostMapping("/transfer")
+    public ResponseEntity<Transaction> transferFunds(@RequestBody TransferDto transferDto, Authentication authentication) throws Exception {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(accountService.transferFunds(transferDto, user));
+    }
 
 
 
