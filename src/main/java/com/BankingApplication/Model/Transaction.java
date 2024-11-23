@@ -1,5 +1,6 @@
 package com.BankingApplication.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -49,11 +50,12 @@ public class Transaction {
 
     @ManyToOne()
     @JoinColumn(name = "owner_id")
+    @JsonBackReference
     private User owner;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    @JsonIgnore
+    @JsonBackReference
     private Account account;
 
 }

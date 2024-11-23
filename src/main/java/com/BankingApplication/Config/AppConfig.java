@@ -11,6 +11,10 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Configuration
 @RequiredArgsConstructor
@@ -44,4 +48,17 @@ public class AppConfig  { //cấu hình cách tải dữ liệu người dùng
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
+    @Bean
+    public RestTemplate restTemplate()
+    {
+        return new RestTemplate();
+    }
+
+    @Bean
+    public ScheduledExecutorService scheduledExecutorService() //tự động lập lịch 1 tác vụ
+    {
+        return Executors.newScheduledThreadPool(1);
+    }
+
 }

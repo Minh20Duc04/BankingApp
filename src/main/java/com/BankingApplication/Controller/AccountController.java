@@ -2,6 +2,7 @@ package com.BankingApplication.Controller;
 
 
 import com.BankingApplication.Dto.AccountDto;
+import com.BankingApplication.Dto.ConvertDto;
 import com.BankingApplication.Dto.TransferDto;
 import com.BankingApplication.Model.Account;
 import com.BankingApplication.Model.Transaction;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,9 +43,24 @@ public class AccountController {
         return ResponseEntity.ok(accountService.transferFunds(transferDto, user));
     }
 
+    @GetMapping("/rates")
+    public ResponseEntity<Map<String, Double>> getExchangeRate()
+    {
+        return ResponseEntity.ok(accountService.getExchangeRate());
+    }
 
+    @PostMapping("/convert")
+    public ResponseEntity<Transaction> convertCurrency(@RequestBody ConvertDto convertDto, Authentication authentication) throws Exception {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(accountService.convertCurrency(convertDto, user));
 
+    }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteByAccountNumber(@RequestParam("accountNumber") Long accountNumber)
+    {
+        return ResponseEntity.ok(accountService.deleteByAccountNumber(accountNumber));
+    }
 
 
 
