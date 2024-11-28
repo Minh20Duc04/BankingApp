@@ -50,12 +50,14 @@ public class Transaction {
 
     @ManyToOne()
     @JoinColumn(name = "owner_id")
-    @JsonBackReference
+//    @JsonBackReference
+    @JsonIgnore
     private User owner;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    @JsonBackReference
+//    @JsonBackReference
+    @JsonIgnore
     private Account account;
 
 }

@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountServiceImp implements AccountService {
 
     private final AccountRepository accountRepository;
@@ -46,7 +46,7 @@ public class AccountServiceImp implements AccountService {
     @Override
     public Transaction transferFunds(TransferDto transferDto, User user) throws Exception {
         //kiểm tra đơn giản xem code người gửi và người nhận có cùng 1 loại tiền không, người nhận có tồn tại không
-        var senderAccount = accountRepository.findByCodeAndOwnerUid(transferDto.getCode(), user.getUid())
+        var senderAccount = accountRepository.findTopByCodeAndOwnerUidOrderByBalanceDesc(transferDto.getCode(), user.getUid())
                 .orElseThrow(()-> new UnsupportedOperationException("Account of type currency do not exists for user"));
         var receiverAccount = accountRepository.findByAccountNumber(transferDto.getReceiverAccountNumber()).orElseThrow();
         return accountHelper.performTransfer(senderAccount, receiverAccount, transferDto.getAmount(), user); //kiểm tra chi tiết ở lớp helper
