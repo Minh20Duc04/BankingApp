@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: BankingApplication
+  datasource:
+    url: jdbc:mysql://localhost:3306/banking_app
+    username: root
+    password: Minhduc3
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 2004
+
+jwtSecretString: OmMiNRXAJdZYS6QI8A0saFBHlRiKA06trwRy73VAZTg0F9mUN710AYKJlHvMS0qwNruNm5AHyKC5uizR92OJ7GeorfmFjHvC44ZbHqVbB3YqeavwEHSoWoii0AEFQRgm
+
+currencyApiKey: ${CURRENCY_API_KEY:cur_live_4w6LyLYDl1zZhRblhAX5TS4DtuXTGeQPiMtwqZMZ}

@@ -1,4 +1,7 @@
 package com.BankingApplication.Dto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +20,8 @@ public class UserDto {
 
     private String lastName;
 
+    @NotBlank(message = "Username is required")
+    @Size(min = 5, max = 25, message = "Username must not to long")
     private String username;
 
     private Date dob;
@@ -25,6 +30,7 @@ public class UserDto {
 
     private String tag;
 
+    @NotBlank(message = "Password is required")
     private String password;
 
     private String gender;

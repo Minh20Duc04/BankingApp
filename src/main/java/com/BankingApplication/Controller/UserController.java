@@ -3,6 +3,7 @@ package com.BankingApplication.Controller;
 import com.BankingApplication.Dto.UserDto;
 import com.BankingApplication.Model.User;
 import com.BankingApplication.Service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,13 +23,13 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody UserDto userDto)
+    public ResponseEntity<User> register(@Valid @RequestBody UserDto userDto)
     {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.registerUser(userDto));
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<?> authenticateUser(@RequestBody UserDto userDto)
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody UserDto userDto)
     {
         var authenticatedUser = userService.authenticateUser(userDto);
         return ResponseEntity.ok()
