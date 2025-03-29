@@ -62,12 +62,4 @@ public class AccountController {
         return ResponseEntity.ok(accountService.deleteByAccountNumber(accountNumber));
     }
 
-
-
-
-
-
-
-
-
 }

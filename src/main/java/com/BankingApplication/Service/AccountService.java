@@ -22,4 +22,7 @@ public interface AccountService {
     Map<String, Double> getExchangeRate();
 
     Transaction convertCurrency(ConvertDto convertDto, User user) throws Exception;
+
+    Account findByAccountNumber(Long accountNumber);
+
 }

@@ -43,6 +43,8 @@ public class AccountServiceImp implements AccountService {
         return "Account has been delete successfully";
     }
 
+
+
     @Override
     public Transaction transferFunds(TransferDto transferDto, User user) throws Exception {
         //kiểm tra đơn giản xem code người gửi và người nhận có cùng 1 loại tiền không, người nhận có tồn tại không
@@ -62,6 +64,10 @@ public class AccountServiceImp implements AccountService {
         return accountHelper.convertCurrency(convertDto, user);
     }
 
+    @Override
+    public Account findByAccountNumber(Long accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber).orElseThrow(()-> new IllegalArgumentException("Account not found with this number"));
+    }
 
 
 }

@@ -52,4 +52,7 @@ public class Account {
     @JsonManagedReference
     private List<Transaction> transactions;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Loan> loans;
+
 }
