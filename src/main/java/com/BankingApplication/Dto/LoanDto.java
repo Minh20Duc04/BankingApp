@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class LoanDto {
 
     @NotNull(message = "Loan amount cannot be null")
-    @Min(value = 1000, message = "Loan amount must be at least 1000")
     private Double loanAmount;
 
     @NotNull(message = "Interest rate is required")

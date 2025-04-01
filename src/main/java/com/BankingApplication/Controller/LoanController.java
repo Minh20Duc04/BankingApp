@@ -18,9 +18,15 @@ public class LoanController {
     private final LoanService loanService;
 
     @PostMapping("/create")
-    public ResponseEntity<Loan> createLoan(@RequestBody LoanDto loanDto, @RequestParam("collateralAsset") CollateralAsset collateralAsset, Authentication authentication){
+    public ResponseEntity<?> createLoan(@RequestBody LoanDto loanDto, @RequestParam("collateralAsset") String collateralAsset, Authentication authentication) throws Exception {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(loanService.createLoan(loanDto, user, collateralAsset));
+        CollateralAsset collateralAsset1;
+        try{
+            collateralAsset1 = CollateralAsset.valueOf(collateralAsset.toUpperCase());
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body("Invalid collateral asset type: " + collateralAsset);
+        }
+        return ResponseEntity.ok(loanService.createLoan(loanDto, user, collateralAsset1.name()));
     }
 
 
