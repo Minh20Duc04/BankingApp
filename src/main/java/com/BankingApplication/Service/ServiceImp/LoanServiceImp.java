@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,19 +32,35 @@ public class LoanServiceImp implements LoanService {
         accountHelper.validateAmount(loanDto.getLoanAmount());
         Loan loan = createNewLoan(loanDto, collateralAsset, account);
         account.setBalance(account.getBalance() + loan.getLoanAmount());
-        deductibleScheduling(account, loan.getLoanAmount());
         return loanRepository.save(loan);
     }
 
 
-    @Scheduled(fixedDelay = 1000)
-    private void deductibleScheduling(Account account, double deduction){
-        if(account.getBalance() < 0){
-            log.info("Đã mất tài sản thế chấp");
+    @Scheduled(cron = "0 0 0 1 * ?") // Mỗi tháng trừ tiền 1 lần, vì Schedule không hỗ trợ lập lịch từng đối tượng nên ta sẽ lập lịch tất cả khoản vay
+    private void deductibleScheduling(){
+        List<Loan> activeLoans = loanRepository.findByStatus(Status.REPAYING);
+
+        for(Loan loan : activeLoans){
+            Account account = loan.getAccount();
+            double payment = loan.getMonthlyPayment();
+
+            //kiểm tra tính hợp lệ
+            if(account.getBalance() >= payment) {
+                account.setBalance(account.getBalance() - payment);
+                loan.setRemainingAmount(loan.getRemainingAmount() - payment);
+
+                //trả xong thì xóa những thao tác vay tiền
+                if(loan.getRemainingAmount() <= 0){
+                    loan.setStatus(Status.COMPLETED);
+                    loan.setCollateralAsset(null);
+                }
+                accountRepository.save(account);
+                loanRepository.save(loan);
+            }else {
+                log.warn("Your account can't effort the loan, you have lost the collateralAsset", account.getAccountName());
+            }
         }
-        else{
-            account.setBalance(account.getBalance() - deduction);
-        }
+
     }
 
     private Loan createNewLoan(LoanDto loanDto, String collateralAsset, Account account) {
@@ -51,12 +68,14 @@ public class LoanServiceImp implements LoanService {
         LocalDateTime dueDate = startDate.plusMonths((long) loanDto.getLoanTerm());
 
         double monthlyPayment = (loanDto.getLoanAmount() * (1 + loanDto.getInterestRate())) / loanDto.getLoanTerm();
+        double remainingAmount = loanDto.getLoanAmount() * (1 + loanDto.getInterestRate());
 
         return Loan.builder()
                 .loanAmount(loanDto.getLoanAmount())
                 .interestRate(loanDto.getInterestRate())
                 .loanTerm(loanDto.getLoanTerm())
                 .monthlyPayment(monthlyPayment)
+                .remainingAmount(remainingAmount)
                 .account(account)
                 .status(Status.REPAYING)
                 .collateralAsset(CollateralAsset.valueOf(collateralAsset))

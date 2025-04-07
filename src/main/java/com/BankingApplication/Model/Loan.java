@@ -22,6 +22,9 @@ public class Loan {
 
     private double loanAmount;
 
+    @JsonIgnore
+    private double remainingAmount;
+
     private double interestRate;
 
     private int loanTerm;
