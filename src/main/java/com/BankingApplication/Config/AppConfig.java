@@ -2,6 +2,8 @@ package com.BankingApplication.Config;
 
 import com.BankingApplication.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -49,10 +52,16 @@ public class AppConfig  { //cấu hình cách tải dữ liệu người dùng
         return config.getAuthenticationManager();
     }
 
+    @Value("${openai.api.key}")
+    private String apiKey;
+
     @Bean
-    public RestTemplate restTemplate()
-    {
-        return new RestTemplate();
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+                .defaultHeader("Authorization", "Bearer " + apiKey)
+                .defaultHeader("HTTP-Referer", "http://localhost:2004") // OpenRouter bắt buộc
+                .defaultHeader("Content-Type", "application/json")
+                .build();
     }
 
     @Bean

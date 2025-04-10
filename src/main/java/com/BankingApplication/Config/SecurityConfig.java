@@ -34,6 +34,8 @@ public class SecurityConfig {
                                         "/swagger-ui.html",
                                         "/swagger-resources/**")
                                 .permitAll()
+                                .requestMatchers("/bot/chat")
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -50,6 +52,7 @@ public class SecurityConfig {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.addAllowedOrigin("http://localhost:2004");
         corsConfig.addAllowedMethod("*");
+        corsConfig.setAllowCredentials(true); // Cho phép gửi cookie/token
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
         return source;

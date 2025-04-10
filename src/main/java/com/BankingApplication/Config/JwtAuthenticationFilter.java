@@ -25,14 +25,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        // Bỏ qua các endpoint public (không yêu cầu xác thực)
+        if (path.startsWith("/user/auth") || path.startsWith("/user/register") || path.startsWith("/bot/chat")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // Lấy token từ 1 request
         String jwtToken = request.getHeader("Authorization");
+
         // Kiểm tra xem token có hợp lệ hay không
         if(jwtToken == null || !jwtToken.startsWith("Bearer "))
         {
             filterChain.doFilter(request, response);
             return;
         }
+
         // Loại bỏ đoạn Bearer ở phía trước, chỉ lấy phần token
         jwtToken = jwtToken.substring(7);
         if(!jwtService.isTokenValid(jwtToken))
@@ -40,6 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+
         // Nếu token hợp lệ thì lấy User từ token đó
         String username = jwtService.extractSubject(jwtToken);
         var user = userDetailsService.loadUserByUsername(username);
@@ -50,6 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authenticationToken.setDetails(request);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
+
         filterChain.doFilter(request, response);
     }
 }
