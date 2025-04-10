@@ -1,6 +1,7 @@
 package com.BankingApplication.Config;
 
 import com.BankingApplication.Repository.UserRepository;
+import com.cloudinary.Cloudinary;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -16,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -62,6 +65,25 @@ public class AppConfig  { //cấu hình cách tải dữ liệu người dùng
                 .defaultHeader("HTTP-Referer", "http://localhost:2004") // OpenRouter bắt buộc
                 .defaultHeader("Content-Type", "application/json")
                 .build();
+    }
+
+    @Value("${cloud.name}")
+    private String cloudName;
+
+    @Value("${api.key}")
+    private String CloudApiKey;
+
+    @Value("${api.secret}")
+    private String apiSecret;
+
+    @Bean
+    public Cloudinary cloudinary(){
+        Map<String, Object> cloudConfig = new HashMap<>();
+        cloudConfig.put("cloud_name", cloudName);
+        cloudConfig.put("api_key", CloudApiKey);
+        cloudConfig.put("api_secret", apiSecret);
+        cloudConfig.put("secure", true);
+        return new Cloudinary(cloudConfig);
     }
 
     @Bean

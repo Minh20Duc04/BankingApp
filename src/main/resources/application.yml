@@ -21,3 +21,7 @@ currencyApiKey: ${CURRENCY_API_KEY:cur_live_4w6LyLYDl1zZhRblhAX5TS4DtuXTGeQPiMtw
 openai.model: meta-llama/llama-4-maverick:free
 openai.api.key: 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
 openai.api.url: https://openrouter.ai/api/v1/chat/completions
+
+cloud.name: dcfmbv2yz
+api.key: 756826661271172
+api.secret: hnSKd18j9mH8zLUY0wbItTI5ZDM

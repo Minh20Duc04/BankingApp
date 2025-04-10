@@ -43,6 +43,8 @@ public class Card {
 
     private String billingAddress;
 
+    private String imageUrl;
+
     @OneToOne()
     @JoinColumn(name = "owner_id")
     @JsonIgnore
@@ -51,5 +53,7 @@ public class Card {
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Transaction> transactions;
+
+
 
 }

@@ -11,6 +11,7 @@ import com.BankingApplication.Util.RandomUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +23,7 @@ public class CardServiceImp implements CardService {
     private final CardRepository cardRepository;
     private final AccountHelper accountHelper;
     private final TransactionService transactionService;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     public Card getCard(User user) {
@@ -30,7 +32,7 @@ public class CardServiceImp implements CardService {
 
     //xây dựng Card từ tiền trong Account, nghĩa là trích 1 phần tiền trong Account ra để làm Card
     @Override
-    public Card createCard(User user, double amount) throws Exception {
+    public Card createCard(User user, double amount, MultipartFile file) throws Exception {
         if(amount < 2)
         {
             throw new IllegalArgumentException("Amount should be greater than $2");
@@ -48,6 +50,7 @@ public class CardServiceImp implements CardService {
             cardNumber = generateCardNumber();
         } while(cardRepository.existsByCardNumber(cardNumber));
 
+        String imageUrl = cloudinaryService.uploadFile(file);
         Card card = Card.builder()
                 .cardHolder(user.getUsername())
                 .cardNumber(cardNumber)
@@ -55,6 +58,7 @@ public class CardServiceImp implements CardService {
                 .cvv(RandomUtil.generateRandom(3).toString())
                 .balance(amount - 1)
                 .owner(user)
+                .imageUrl(imageUrl)
                 .build();
         cardRepository.save(card);
 

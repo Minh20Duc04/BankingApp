@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,9 +26,9 @@ public class CardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Card> createCard(@RequestParam("amount") double amount, Authentication authentication) throws Exception {
+    public ResponseEntity<Card> createCard(@RequestParam("amount") double amount, Authentication authentication, @RequestParam(name = "file") MultipartFile file) throws Exception {
         User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(cardService.createCard(user, amount));
+        return ResponseEntity.ok(cardService.createCard(user, amount, file));
     }
 
     @PostMapping("/credit")
