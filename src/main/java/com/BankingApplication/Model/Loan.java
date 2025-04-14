@@ -36,6 +36,9 @@ public class Loan {
 
     private LocalDateTime dueDate;
 
+    @JsonIgnore
+    private String ownerEmail;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     @JsonIgnore

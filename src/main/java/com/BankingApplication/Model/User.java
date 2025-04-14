@@ -2,6 +2,8 @@ package com.BankingApplication.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.Array;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,6 +49,10 @@ public class User implements UserDetails {
     private String password;
 
     private String gender;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email is invalid")
+    private String email;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

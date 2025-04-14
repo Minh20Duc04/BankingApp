@@ -18,6 +18,4 @@ public class AccountDto {
     private char symbol;
 
 
-
-
 }

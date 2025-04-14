@@ -37,6 +37,9 @@ public class Account {
 
     private char symbol;
 
+    @JsonIgnore
+    private String ownerEmail;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 

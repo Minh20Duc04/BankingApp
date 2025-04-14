@@ -87,6 +87,13 @@
 			<version>1.37.0</version>
 		</dependency>
 
+		<!-- Spring Boot Starter Mail for email services -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>

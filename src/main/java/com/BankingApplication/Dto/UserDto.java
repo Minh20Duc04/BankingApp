@@ -1,4 +1,5 @@
 package com.BankingApplication.Dto;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
@@ -27,6 +28,8 @@ public class UserDto {
     private Date dob;
 
     private long tel;
+
+    private String email;
 
     private String tag;
 

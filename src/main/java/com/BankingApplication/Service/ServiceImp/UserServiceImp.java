@@ -60,6 +60,7 @@ public class UserServiceImp implements UserService {
                 .tel(userDto.getTel())
                 .gender(userDto.getGender())
                 .tag("io_" + userDto.getUsername())
+                .email(userDto.getEmail())
                 .roles(List.of("USER"))
                 .build();
     }

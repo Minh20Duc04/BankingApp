@@ -58,6 +58,7 @@ public class AccountHelper {
                 .accountName(user.getFirstName() + " " + user.getLastName())
                 .accountNumber(accountNumber)
                 .owner(user)
+                .ownerEmail(user.getEmail())
                 .label(CURRENCIES.get(accountDto.getCode()))
                 .code(accountDto.getCode())
                 .balance(1000)
