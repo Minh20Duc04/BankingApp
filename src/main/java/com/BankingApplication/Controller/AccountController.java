@@ -62,4 +62,10 @@ public class AccountController {
         return ResponseEntity.ok(accountService.deleteByAccountNumber(accountNumber));
     }
 
+    @PostMapping("/recharge")
+    public ResponseEntity<String> recharge(@RequestParam("accountNumber") Long accountNumber, double amount, Authentication authentication) throws Exception {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(accountService.recharge(user,accountNumber, amount));
+    }
+
 }

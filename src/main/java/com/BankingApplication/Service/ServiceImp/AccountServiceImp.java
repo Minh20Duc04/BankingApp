@@ -5,9 +5,11 @@ import com.BankingApplication.Dto.ConvertDto;
 import com.BankingApplication.Dto.TransferDto;
 import com.BankingApplication.Model.Account;
 import com.BankingApplication.Model.Transaction;
+import com.BankingApplication.Model.Type;
 import com.BankingApplication.Model.User;
 import com.BankingApplication.Repository.AccountRepository;
 import com.BankingApplication.Service.AccountService;
+import com.BankingApplication.Service.TransactionService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ public class AccountServiceImp implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountHelper accountHelper;
     private final ExchangeRateService exchangeRateService;
+    private final TransactionService transactionService;
 
     @Override
     public Account createAccount(AccountDto accountDto, User user) {
@@ -67,6 +70,16 @@ public class AccountServiceImp implements AccountService {
     @Override
     public Account findByAccountNumber(Long accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber).orElseThrow(()-> new IllegalArgumentException("Account not found with this number"));
+    }
+
+    @Override
+    public String recharge(User user,Long accountNumber, double amount) throws Exception {
+        Account account = findByAccountNumber(accountNumber);
+        accountHelper.validateAmount(amount);
+        account.setBalance(account.getBalance() + amount);
+        accountRepository.save(account);
+        transactionService.createAccountTransaction(amount, account, Type.RECHARGE, user, 0.00);
+        return "Your account has been recharged.";
     }
 
 

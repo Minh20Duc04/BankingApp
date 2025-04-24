@@ -25,4 +25,5 @@ public interface AccountService {
 
     Account findByAccountNumber(Long accountNumber);
 
+    String recharge(User user, Long accountNumber, double amount) throws Exception;
 }
