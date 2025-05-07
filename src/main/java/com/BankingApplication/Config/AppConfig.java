@@ -58,14 +58,25 @@ public class AppConfig  { //cấu hình cách tải dữ liệu người dùng
     @Value("${openai.api.key}")
     private String apiKey;
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    @Bean("openAiRestTemplate")
+    public RestTemplate openAiRestTemplate(RestTemplateBuilder builder) {
+        if (apiKey == null || apiKey.isEmpty()) {
+            throw new IllegalStateException("API key is missing or empty!");
+        }
+
         return builder
                 .defaultHeader("Authorization", "Bearer " + apiKey)
-                .defaultHeader("HTTP-Referer", "http://localhost:2004") // OpenRouter bắt buộc
+                .defaultHeader("HTTP-Referer", "http://localhost:2004")
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }
+
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
 
     @Value("${cloud.name}")
     private String cloudName;

@@ -1,6 +1,9 @@
 package com.BankingApplication.Service.ServiceImp;
 import com.BankingApplication.Dto.AccountDto;
 import com.BankingApplication.Dto.ConvertDto;
+import com.BankingApplication.Exception.AccountNonExistsForUserException;
+import com.BankingApplication.Exception.InsufficientFundsException;
+import com.BankingApplication.Exception.SameCurrencyConversionException;
 import com.BankingApplication.Model.*;
 import com.BankingApplication.Repository.AccountRepository;
 import com.BankingApplication.Service.TransactionService;
@@ -82,7 +85,7 @@ public class AccountHelper {
     {
         if(accountRepository.existsByCodeAndOwnerUid(code, uId))
         {
-            throw new Exception("Account of this type already exist for this user");
+            throw new AccountNonExistsForUserException("Account of this type already exist for this user");
         }
     }
 
@@ -96,34 +99,34 @@ public class AccountHelper {
     }
 
     //kiểm tra logic tiền muốn gửi và tiền thực tế
-    public void validateSufficientFunds(Account account, double amount) throws Exception {
+    public void validateSufficientFunds(Account account, double amount) throws InsufficientFundsException {
         if(account.getBalance() < amount)
         {
-            throw new OperationNotSupportedException("Insufficient funds in the account");
+            throw new InsufficientFundsException("Insufficient funds in the account");
         }
     }
 
-    public void validateAmount(double amount) throws Exception
+    public void validateAmount(double amount) throws InsufficientFundsException
     {
         if(amount <= 0)
         {
-            throw new IllegalArgumentException("Invalid amount");
+            throw new InsufficientFundsException("Invalid amount");
         }
     }
 
-    public void validateDifferentCurrencyType(ConvertDto convertDto) throws Exception
+    public void validateDifferentCurrencyType(ConvertDto convertDto) throws SameCurrencyConversionException
     {
         if(convertDto.getFromCurrency().equals(convertDto.getToCurrency()))
         {
-            throw new IllegalArgumentException("Conversion between the same currency type is not allowed");
+            throw new SameCurrencyConversionException("Conversion between the same currency type is not allowed");
         }
     }
 
     //đảm bảo rằng việc đổi tiền phải từ cùng 1 User, ví dụ 1 người có 2 tk muốn chuyển tk chứa tiền Việt sang tk chứa tiền Đô thì
     public void validateAccountOwnership(ConvertDto convertDto, String uid) throws Exception
     {
-        accountRepository.findTopByCodeAndOwnerUidOrderByBalanceDesc(convertDto.getFromCurrency(), uid).orElseThrow();
-        accountRepository.findTopByCodeAndOwnerUidOrderByBalanceDesc(convertDto.getToCurrency(), uid).orElseThrow();
+        accountRepository.findTopByCodeAndOwnerUidOrderByBalanceDesc(convertDto.getFromCurrency(), uid).orElseThrow(()-> new AccountNonExistsForUserException("No account found with currency" + convertDto.getFromCurrency()));
+        accountRepository.findTopByCodeAndOwnerUidOrderByBalanceDesc(convertDto.getToCurrency(), uid).orElseThrow(()-> new AccountNonExistsForUserException("No account found with currency" + convertDto.getToCurrency()));
     }
 
     public void validateConversion(ConvertDto convertDto, String uid) throws Exception

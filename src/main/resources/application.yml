@@ -31,9 +31,10 @@ jwtSecretString: OmMiNRXAJdZYS6QI8A0saFBHlRiKA06trwRy73VAZTg0F9mUN710AYKJlHvMS0q
 
 currencyApiKey: ${CURRENCY_API_KEY:cur_live_4w6LyLYDl1zZhRblhAX5TS4DtuXTGeQPiMtwqZMZ}
 
-openai.model: meta-llama/llama-4-maverick:free
-openai.api.key: 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
+openai.api.key: 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
 openai.api.url: https://openrouter.ai/api/v1/chat/completions
+openai.model: meta-llama/llama-4-maverick:free
+
 
 cloud.name: dcfmbv2yz
 api.key: 756826661271172
