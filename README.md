@@ -81,7 +81,7 @@ http://localhost:2004/swagger-ui.html
 This provides detailed information about all REST endpoints, request/response schemas, and authentication requirements.
 
 ## 🤝 Contributing
-We welcome contributions to improve ElderSync!
+We welcome contributions to improve Banking_App!
 
 1. Fork the repository
 2. Create a feature branch:
